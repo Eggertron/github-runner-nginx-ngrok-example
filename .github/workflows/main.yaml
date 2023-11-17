@@ -1,0 +1,24 @@
+on: 
+  workflow_dispatch:
+    inputs:
+      ngrok_auth_token:
+        description: "Your ngrok auth token"
+        required: false
+      output_type:
+        type: choice
+        description: nginx only
+        options:
+          - nginx
+
+jobs:
+  convertVideo:
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu
+    steps:
+    - run: |
+        apt-get install -y nginx
+        echo "Server Ready" >> $GITHUB_STEP_SUMMARY
+        echo "nginx version: $(nginx --version)" >> $GITHUB_STEP_SUMMARY
+        
+        
