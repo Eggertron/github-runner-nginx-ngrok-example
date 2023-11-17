@@ -20,4 +20,7 @@ jobs:
         apt-get update
         apt-get install -y nginx
         echo "Server Ready" >> $GITHUB_STEP_SUMMARY
-        echo "nginx version: $(nginx --version)" >> $GITHUB_STEP_SUMMARY
+        echo "nginx version: $(nginx -v)" >> $GITHUB_STEP_SUMMARY
+        ps aux | grep nginx
+        ss -plunt
+        
