@@ -40,6 +40,7 @@ jobs:
         echo "Server up for ${{ github.event.inputs.uptime_seconds }} seconds" >> $GITHUB_STEP_SUMMARY
         sleep ${{ github.event.inputs.uptime_seconds }}
         echo "Bringing Server Down now!" >> $GITHUB_STEP_SUMMARY
+        pkill ngrok
         pkill nginx
     - run: |
         echo "Is nginx still installed? $(nginx -v)" >> $GITHUB_STEP_SUMMARY
