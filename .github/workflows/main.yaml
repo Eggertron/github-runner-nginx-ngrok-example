@@ -11,14 +11,13 @@ on:
           - nginx
 
 jobs:
-  convertVideo:
+  Deploy-nginx-server:
     runs-on: ubuntu-latest
     container:
       image: ubuntu
     steps:
     - run: |
+        apt-get update
         apt-get install -y nginx
         echo "Server Ready" >> $GITHUB_STEP_SUMMARY
         echo "nginx version: $(nginx --version)" >> $GITHUB_STEP_SUMMARY
-        
-        
