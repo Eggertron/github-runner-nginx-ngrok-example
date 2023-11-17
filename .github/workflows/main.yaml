@@ -4,6 +4,11 @@ on:
       ngrok_auth_token:
         description: "Your ngrok auth token"
         required: false
+      uptime_seconds:
+        type: choice
+        description: server will live for this many seconds. max is 6  hours.
+        options:
+          - "10"
       output_type:
         type: choice
         description: nginx only
@@ -19,11 +24,21 @@ jobs:
     - run: |
         apt-get update
         apt-get install -y nginx
+        # Install ngrok
+        curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | \
+        tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null && \
+        echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | \
+        tee /etc/apt/sources.list.d/ngrok.list && \
+        apt update && sudo apt install ngrok
         echo "Server Ready" >> $GITHUB_STEP_SUMMARY
         echo "nginx version: $(nginx -v)" >> $GITHUB_STEP_SUMMARY
+        echo "ngrok version: $(ngrok -v)" >> $GITHUB_STEP_SUMMARY
         nginx &
         ps aux | grep nginx
         ss -plunt
-        sleep 10
+        echo "Server up for ${{ github.event.inputs.uptime_seconds }} seconds" >> $GITHUB_STEP_SUMMARY
+        sleep ${{ github.event.inputs.uptime_seconds }}
+        echo "Bringing Server Down now!" >> $GITHUB_STEP_SUMMARY
         pkill nginx
-        
+    - run: |
+        echo "Is nginx still installed? $(nginx -v)" >> $GITHUB_STEP_SUMMARY
