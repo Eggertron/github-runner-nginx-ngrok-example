@@ -25,7 +25,8 @@ jobs:
         apt-get update
         apt-get install -y nginx
         # Install ngrok
-        curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null && echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | tee /etc/apt/sources.list.d/ngrok.list && apt-get update && apt-get install -y ngrok
+        curl -OLJ https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz
+        tar xvzf ngrok-v3-stable-linux-amd64.tgz -C /usr/local/bin
         echo "Server Ready" >> $GITHUB_STEP_SUMMARY
         echo "nginx version: $(nginx -v)" >> $GITHUB_STEP_SUMMARY
         echo "ngrok version: $(ngrok -v)" >> $GITHUB_STEP_SUMMARY
