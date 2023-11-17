@@ -2,13 +2,15 @@ on:
   workflow_dispatch:
     inputs:
       ngrok_auth_token:
-        description: "Your ngrok auth token"
-        required: false
+        description: Your ngrok auth token. login into your ngrok account obtain your token
+        required: true
       uptime_seconds:
         type: choice
         description: server will live for this many seconds. max is 6  hours.
         options:
+          - "30"
           - "10"
+          - "300"
       output_type:
         type: choice
         description: nginx only
@@ -33,6 +35,8 @@ jobs:
         nginx &
         ps aux | grep nginx
         ss -plunt
+        ngrok config add-authtoken ${{ github.event.inputs.ngrok_auth_token }}
+        ngrok http 80
         echo "Server up for ${{ github.event.inputs.uptime_seconds }} seconds" >> $GITHUB_STEP_SUMMARY
         sleep ${{ github.event.inputs.uptime_seconds }}
         echo "Bringing Server Down now!" >> $GITHUB_STEP_SUMMARY
