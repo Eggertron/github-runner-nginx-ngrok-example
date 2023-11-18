@@ -23,7 +23,8 @@ jobs:
     container:
       image: ubuntu
     steps:
-    - run: |
+    - name: setup runner as web server
+      run: |
         apt-get update
         apt-get install -y nginx curl
         # Install ngrok
@@ -32,13 +33,17 @@ jobs:
         echo "Server Ready" >> $GITHUB_STEP_SUMMARY
         echo "nginx version: $(nginx -v)" >> $GITHUB_STEP_SUMMARY
         echo "ngrok version: $(ngrok -v)" >> $GITHUB_STEP_SUMMARY
+    - name: deploy webserver on runner
+      run: |
         nginx &
-        ps aux | grep nginx
-        ss -plunt
         ngrok config add-authtoken ${{ github.event.inputs.ngrok_auth_token }}
         ngrok http 80 --log=stdout &
         echo "Server up for ${{ github.event.inputs.uptime_seconds }} seconds" >> $GITHUB_STEP_SUMMARY
         sleep ${{ github.event.inputs.uptime_seconds }}
+    - name: shutdown server on runner
+      run: |
+        ps aux | grep nginx
+        ps aux | grep ngrok
         echo "Bringing Server Down now!" >> $GITHUB_STEP_SUMMARY
         pkill ngrok
         pkill nginx
