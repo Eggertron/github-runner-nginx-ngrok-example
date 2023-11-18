@@ -36,7 +36,7 @@ jobs:
         ps aux | grep nginx
         ss -plunt
         ngrok config add-authtoken ${{ github.event.inputs.ngrok_auth_token }}
-        ngrok http 80 -log=stdout &
+        ngrok http 80 --log=stdout &
         echo "Server up for ${{ github.event.inputs.uptime_seconds }} seconds" >> $GITHUB_STEP_SUMMARY
         sleep ${{ github.event.inputs.uptime_seconds }}
         echo "Bringing Server Down now!" >> $GITHUB_STEP_SUMMARY
